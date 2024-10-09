@@ -54,7 +54,7 @@ jobs:
       run: |
         source $(conda info --base)/etc/profile.d/conda.sh  # Initialize Conda
         conda activate grid_pdf-model-dev
-        pip install git+https://${{ secrets.WMIN_TOKEN }}@github.com/HEP-PBSP/colibri.git
+        pip install git+https://${{ secrets.GRIDPDF_TOKEN }}@github.com/HEP-PBSP/colibri.git
 
     - name: Lint with flake8
       shell: bash -l {0}
@@ -73,7 +73,7 @@ jobs:
     #     source $(conda info --base)/etc/profile.d/conda.sh  # Initialize Conda
     #     conda activate grid_pdf-model-dev
     #     pip install pytest pytest-cov
-    #     pytest -p no:warnings wmin/tests --cov --cov-report=xml
+    #     pytest -p no:warnings grid_pdf/tests --cov --cov-report=xml
 
     # - name: Upload coverage reports to Codecov
     #   uses: codecov/codecov-action@v4.2.0
