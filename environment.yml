@@ -13,3 +13,4 @@ dependencies:
   - pip
   - pip:
     - -e .
+    - git+https://github.com/HEP-PBSP/colibri.git
