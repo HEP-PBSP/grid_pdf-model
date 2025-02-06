@@ -82,7 +82,10 @@ def pdf_prior_grid(prior_settings, pdf_model):
     Load the replicas grid for the Bayesian prior.
     """
     # Load the prior PDF
-    pdf = PDF(prior_settings["pdf_prior"])
+    if "pdf_prior" not in prior_settings.prior_distribution_specs:
+        raise ValueError("No prior PDF set for the Bayesian prior.")
+
+    pdf = PDF(prior_settings.prior_distribution_specs["pdf_prior"])
 
     replicas_grid = jnp.concatenate(
         [
@@ -110,7 +113,7 @@ def bayesian_prior(prior_settings, pdf_model):
     pdf_model: pdf_model.PDFModel
         The PDF model to fit.
 
-    prior_settings: dict
+    prior_settings: dataclass
         Settings for the prior.
 
     Returns
@@ -119,8 +122,8 @@ def bayesian_prior(prior_settings, pdf_model):
         The prior transform function.
     """
 
-    if prior_settings["type"] == "uniform_pdf_prior":
-        nsigma = prior_settings["nsigma"]
+    if prior_settings.prior_distribution == "uniform_pdf_prior":
+        nsigma = prior_settings.prior_distribution_specs["nsigma"]
         pdf_grid = pdf_prior_grid(prior_settings, pdf_model)
 
         # Remove central replica
@@ -140,7 +143,7 @@ def bayesian_prior(prior_settings, pdf_model):
             params = error_down + (error_up - error_down) * cube
             return params
 
-    elif prior_settings["type"] == "gaussian_pdf_prior":
+    elif prior_settings.prior_distribution == "gaussian_pdf_prior":
         pdf_grid = pdf_prior_grid(prior_settings, pdf_model)
 
         central_prior_grid = pdf_grid[0, :, :, :].squeeze()

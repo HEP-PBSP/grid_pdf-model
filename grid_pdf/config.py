@@ -23,18 +23,6 @@ class GridPdfConfig(colibriConfig):
     def produce_flavour_xgrids(self, grid_pdf_settings):
         return grid_pdf_settings["xgrids"]
 
-    def parse_prior_settings(self, settings):
-        # In the case of a uniform prior around a central PDF, we also need
-        # to specify the total number of standard deviations around the mean
-        # which we allow.
-        if settings["type"] == "uniform_pdf_prior":
-            # Check if number of standard deviations are supplied, default to 2
-            # otherwise.
-            if "nsigma" not in settings.keys():
-                settings["nsigma"] = 2
-
-        return settings
-
     def produce_pdf_model(self, flavour_xgrids, output_path):
         """
         Produce the PDF model for the grid_pdf fit.
