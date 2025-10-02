@@ -186,7 +186,7 @@ def bayesian_prior(prior_settings, pdf_model):
 
 def pdf_initial_parameters(pdf_model, param_initialiser_settings, replica_index):
     """
-    The initial parameters for the Monte Carlo fit.
+    The initial parameters for gradient descent-based fitting.
 
     NOTE: this function overrides the one in colibri.param_initialisation.
 
