@@ -122,7 +122,7 @@ max_epochs: 5000                       # The max number of epochs in Monte Carlo
 mc_validation_fraction: 0.0            # The fraction of the data used for validation in Monte Carlo training.
 
 
-mc_initialiser_settings:               # The initialiser for Monte Carlo training.
+param_initialiser_settings:               # The initialiser for Monte Carlo training.
   type: pdf                        # This setting starts with all parameters equal to zero.
   pdf_set: NNPDF40_nnlo_as_01180
   init_type: uniform

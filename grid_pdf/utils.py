@@ -184,18 +184,18 @@ def bayesian_prior(prior_settings, pdf_model):
     return prior_transform
 
 
-def mc_initial_parameters(pdf_model, mc_initialiser_settings, replica_index):
+def pdf_initial_parameters(pdf_model, param_initialiser_settings, replica_index):
     """
     The initial parameters for the Monte Carlo fit.
 
-    NOTE: this function overrides the one in colibri.mc_initialisation.
+    NOTE: this function overrides the one in colibri.param_initialisation.
 
     Parameters
     ----------
     pdf_model: pdf_model.PDFModel
         The PDF model to fit.
 
-    mc_initialiser_settings: dict
+    param_initialiser_settings: dict
         Settings for the initialiser.
 
     replica_index: int
@@ -207,10 +207,10 @@ def mc_initial_parameters(pdf_model, mc_initialiser_settings, replica_index):
         The initial parameters.
     """
 
-    if mc_initialiser_settings["type"] == "pdf":
+    if param_initialiser_settings["type"] == "pdf":
         rng = jax.random.PRNGKey(replica_index)
         # Load the PDF
-        pdf = PDF(mc_initialiser_settings["pdf_set"])
+        pdf = PDF(param_initialiser_settings["pdf_set"])
 
         replicas_grid = jnp.concatenate(
             [
@@ -226,11 +226,11 @@ def mc_initial_parameters(pdf_model, mc_initialiser_settings, replica_index):
         # Remove central replica
         replicas_grid = replicas_grid[1:, :, :, :]
 
-        if mc_initialiser_settings["init_type"] == "central":
+        if param_initialiser_settings["init_type"] == "central":
             return central_grid
 
-        elif mc_initialiser_settings["init_type"] == "uniform":
-            nsigma = mc_initialiser_settings["nsigma"]
+        elif param_initialiser_settings["init_type"] == "uniform":
+            nsigma = param_initialiser_settings["nsigma"]
 
             error68_up = jnp.nanpercentile(replicas_grid, 84.13, axis=0).reshape(-1)
             error68_down = jnp.nanpercentile(replicas_grid, 15.87, axis=0).reshape(-1)
@@ -248,6 +248,6 @@ def mc_initial_parameters(pdf_model, mc_initialiser_settings, replica_index):
 
             return central_grid + epsilon * delta
     else:
-        return colibri.mc_initialisation.mc_initial_parameters(
-            pdf_model, mc_initialiser_settings, replica_index
+        return colibri.param_initialisation.pdf_initial_parameters(
+            pdf_model, param_initialiser_settings, replica_index
         )
