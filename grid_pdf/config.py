@@ -23,13 +23,14 @@ class GridPdfConfig(colibriConfig):
     def produce_flavour_xgrids(self, grid_pdf_settings):
         return grid_pdf_settings["xgrids"]
 
-    def produce_pdf_model(self, flavour_xgrids, output_path):
+    def produce_pdf_model(self, flavour_xgrids, output_path, dump_model=True):
         """
         Produce the PDF model for the grid_pdf fit.
         """
         model = GridPDFModel(flavour_xgrids)
-        # dump model to output_path using dill
-        # this is mainly needed by scripts/ns_resampler.py
-        with open(output_path / "pdf_model.pkl", "wb") as file:
-            dill.dump(model, file)
+        if dump_model:
+            # dump model to output_path using dill
+            # this is mainly needed by scripts/ns_resampler.py
+            with open(output_path / "pdf_model.pkl", "wb") as file:
+                dill.dump(model, file)
         return model
