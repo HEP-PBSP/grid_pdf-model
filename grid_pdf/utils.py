@@ -13,6 +13,7 @@ import colibri
 from validphys.core import PDF
 
 import colibri.bayes_prior
+from colibri.core import BayesianPrior
 
 
 def closure_test_central_pdf_grid(
@@ -138,6 +139,14 @@ def bayesian_prior(prior_settings, pdf_model):
         error_up = mean + delta * nsigma
         error_down = mean - delta * nsigma
 
+        # Define dummy log_prob and sample for now
+        @jax.jit
+        def log_prob(x):
+            raise NotImplementedError("log_prob not implemented for Gaussian prior")
+
+        def sample(rng_key, n_samples):
+            raise NotImplementedError("sample not implemented for Gaussian prior")
+
         @jax.jit
         def prior_transform(cube):
             params = error_down + (error_up - error_down) * cube
@@ -164,6 +173,13 @@ def bayesian_prior(prior_settings, pdf_model):
         cholesky_pdf_covmat = jnp.diag(jnp.sqrt(pdf_diag_covmat_prior))
 
         @jax.jit
+        def log_prob(x):
+            raise NotImplementedError("log_prob not implemented for Gaussian prior")
+
+        def sample(rng_key, n_samples):
+            raise NotImplementedError("sample not implemented for Gaussian prior")
+
+        @jax.jit
         def prior_transform(cube):
             """
             This currently does not support vectorisation.
@@ -181,7 +197,11 @@ def bayesian_prior(prior_settings, pdf_model):
     else:
         return colibri.bayes_prior.bayesian_prior(prior_settings)
 
-    return prior_transform
+    return BayesianPrior(
+        prior_transform=prior_transform,
+        log_prob=log_prob,
+        sample=sample,
+    )
 
 
 def pdf_initial_parameters(pdf_model, param_initialiser_settings, replica_index):

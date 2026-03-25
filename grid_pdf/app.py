@@ -7,7 +7,6 @@ The grid_pdf app.
 from colibri.app import colibriApp
 from grid_pdf.config import GridPdfConfig
 
-
 grid_pdf_providers = [
     "grid_pdf.model",
     "grid_pdf.utils",
